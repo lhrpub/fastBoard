@@ -14,8 +14,8 @@ logging:
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/fast_board
-    username: root
-    password: ghkfuf
+    username: lhr
+    password: 
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     defer-datasource-initialization: true
