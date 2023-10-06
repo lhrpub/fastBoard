@@ -10,12 +10,10 @@ import com.fast.projectboard.domain.Article;
 import com.fast.projectboard.domain.UserAccount;
 import com.fast.projectboard.domain.type.SearchType;
 import com.fast.projectboard.dto.ArticleDto;
-import com.fast.projectboard.dto.ArticleUpdateDto;
 import com.fast.projectboard.dto.ArticleWithCommentsDto;
 import com.fast.projectboard.dto.UserAccountDto;
 import com.fast.projectboard.repository.ArticleRepository;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
@@ -59,14 +57,14 @@ class ArticleServiceTest {
         SearchType searchType = SearchType.TITLE;
         String searchKeyword = "title";
         Pageable pageable = Pageable.ofSize(20);
-        given(articleRepository.findByTitle(searchKeyword, pageable)).willReturn(Page.empty());
+        given(articleRepository.findByTitleContaining(searchKeyword, pageable)).willReturn(Page.empty());
 
         // When
         Page<ArticleDto> articles = sut.searchArticles(searchType, searchKeyword, pageable);
 
         // Then
         assertThat(articles).isEmpty();
-        then(articleRepository).should().findByTitle(searchKeyword, pageable);
+        then(articleRepository).should().findByTitleContaining(searchKeyword, pageable);
     }
 
     @DisplayName("게시글을 조회하면, 게시글을 반환한다.")
