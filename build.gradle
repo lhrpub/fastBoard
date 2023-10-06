@@ -36,6 +36,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.data:spring-data-rest-hal-explorer'
 
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     // queryDSL 설정
     implementation "com.querydsl:querydsl-jpa"
     implementation "com.querydsl:querydsl-core"
