@@ -5,6 +5,7 @@ import com.fast.projectboard.domain.type.SearchType;
 import com.fast.projectboard.dto.ArticleDto;
 import com.fast.projectboard.dto.ArticleWithCommentsDto;
 import com.fast.projectboard.repository.ArticleRepository;
+import java.util.List;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +29,11 @@ public class ArticleService {
         }
 
         return switch (searchType) {
-            case TITLE -> articleRepository.findByTitleContaining(searchKeyword,pageable);
-            case CONTENT -> articleRepository.findByContentContaining(searchKeyword,pageable);
-            case HASHTAG -> articleRepository.findByHashtag("#" + searchKeyword,pageable);
-            case NICKNAME -> articleRepository.findByUserAccount_NicknameContaining(searchKeyword,pageable);
-            case ID -> articleRepository.findByUserAccount_UserIdContaining(searchKeyword,pageable);
+            case TITLE -> articleRepository.findByTitleContaining(searchKeyword, pageable).map(ArticleDto::from);
+            case CONTENT -> articleRepository.findByContentContaining(searchKeyword, pageable).map(ArticleDto::from);
+            case ID -> articleRepository.findByUserAccount_UserIdContaining(searchKeyword, pageable).map(ArticleDto::from);
+            case NICKNAME -> articleRepository.findByUserAccount_NicknameContaining(searchKeyword, pageable).map(ArticleDto::from);
+            case HASHTAG -> articleRepository.findByHashtag("#" + searchKeyword, pageable).map(ArticleDto::from);
         };
 
     }
@@ -63,5 +64,22 @@ public class ArticleService {
     public void deleteArticle(long articleId) {
         articleRepository.deleteById(articleId);
 
+    }
+
+    public long getArticleCount() {
+        return articleRepository.count();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ArticleDto> searchArticlesViaHashtag(String hashtag, Pageable pageable) {
+        if (hashtag == null || hashtag.isBlank()) {
+            return Page.empty(pageable);
+        }
+
+        return articleRepository.findByHashtag(hashtag, pageable).map(ArticleDto::from);
+    }
+
+    public List<String> getHashtags() {
+        return articleRepository.findAllDistinctHashtags();
     }
 }
